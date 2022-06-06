@@ -1,10 +1,9 @@
 import cv2 as cv
-from cv2 import imshow
 import numpy as np
 import matplotlib.pyplot as plt
 import skimage as sk
 from skimage.segmentation import clear_border
-# from customDilate import dilate
+from customFunctions import erode
 
 def resize_image_and_show(image):
     preRezised = image
@@ -22,6 +21,7 @@ def resize_image_and_show(image):
     # cv.waitKey(0)
     # cv.destroyAllWindows()
 
+# Own implementation of matlab find function to find all white corner pixels in image
 def find_coords_box(image):
     c1, c2, c3, c4 = 0, 0, 0, 0
     list_of_white_pixels = []
@@ -41,16 +41,12 @@ def find_coords_box(image):
         y = list_of_white_pixels[i][1]
         if (y + x) < (c1[1] + c1[0]):
             c1 = list_of_white_pixels[i]
-            c1_index = i
         if (y - x) < (c2[1] - c2[0]):
             c2 = list_of_white_pixels[i]
-            c2_index = i
         if (y + x) > (c3[1] + c3[0]):
             c3 = list_of_white_pixels[i]
-            c3_index = i
         if (y - x) > (c4[1] - c4[0]):
             c4 = list_of_white_pixels[i]
-            c4_index = i
     
     return c1, c2, c3, c4
 
@@ -67,7 +63,7 @@ def process_image(image):
     dilated = cv.dilate(thresh, kernel, iterations=3)
     
     # dilate thresh
-    eroded = cv.erode(dilated, kernel, iterations=3)
+    eroded = erode(dilated, 3, iterations=3)
 
     
     eroded = clear_border(eroded)
