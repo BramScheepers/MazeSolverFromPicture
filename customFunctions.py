@@ -46,6 +46,6 @@ def erode(image, kernel_size=3, iterations=0):
     eroded_image = eroded_image.reshape(image.shape)
 
     if iterations > 1:
-        eroded_image = dilate(eroded_image, kernel_size, iterations - 1)
+        eroded_image = erode(eroded_image, kernel_size, iterations - 1)
 
     return np.uint8(eroded_image)
